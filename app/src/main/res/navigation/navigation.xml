@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.flawlessconcepts.sufollowup.fragments.homefragment.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home"/>
+    <fragment
+        android:id="@+id/favouriteFragment2"
+        android:name="com.flawlessconcepts.sufollowup.fragments.favourite.FavouriteFragment"
+        android:label="FavouriteFragment" />
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.flawlessconcepts.sufollowup.fragments.user.UserFragment"
+        android:label="UserFragment" />
+    <fragment
+        android:id="@+id/lessonListFragment"
+        android:name="com.flawlessconcepts.sufollowup.fragments.lessonlist.LessonListFragment"
+        android:label="LessonListFragment" />
+</navigation>
