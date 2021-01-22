@@ -36,7 +36,7 @@ class SingleLessonViewModel (
 
 
     private suspend fun getLessonFromDatabase(lessonKey: Int): FollowUpItem? {
-        var lesson = database.getFollowByID(lessonKey)
+       var lesson = database.getFollowByID(lessonKey)
         return lesson
     }
 

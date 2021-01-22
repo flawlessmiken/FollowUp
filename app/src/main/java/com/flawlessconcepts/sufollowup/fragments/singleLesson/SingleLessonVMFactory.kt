@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.flawlessconcepts.sufollowup.database.FollowUpDatabaseDao
 
 class SingleLessonVMFactory (
-    private val lessonKey: Long,
+    private val lessonKey: Int,
     private val dataSource: FollowUpDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

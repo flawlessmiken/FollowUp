@@ -17,10 +17,7 @@
 package com.flawlessconcepts.sufollowup.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 
 /**
@@ -39,7 +36,21 @@ interface FollowUpDatabaseDao {
     suspend fun getFollowByID(key: Int): FollowUpItem?
 
     @Query("SELECT * FROM followup_item_table ORDER BY followUpID DESC")
-    suspend fun getAllFollowUpLessons(): LiveData<List<FollowUpItem>>
+     fun getAllFollowUpLessons(): LiveData<List<FollowUpItem>>
+
+    @Query("SELECT * FROM followup_item_table WHERE favourite ORDER BY followUpID DESC LIMIT 4")
+     fun getFavourites(): LiveData<List<FollowUpItem>>
+
+
+    @Query("SELECT * FROM followup_item_table  ORDER BY followUpID DESC LIMIT 4")
+    fun getSomeLessons(): LiveData<List<FollowUpItem>>
+
+
+    @Query("SELECT * FROM followup_item_table LIMIT 1")
+    fun getAnyLesson(): FollowUpItem?
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addLessons(lessons: List<FollowUpItem>?): LongArray?
 
 //    @Query("DELETE FROM daily_sleep_quality_table")
 //    fun clear()
