@@ -17,6 +17,7 @@
 package com.flawlessconcepts.sufollowup.database
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 
@@ -26,7 +27,7 @@ import androidx.room.*
 @Dao
 interface FollowUpDatabaseDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: FollowUpItem)
 
     @Update
@@ -35,22 +36,34 @@ interface FollowUpDatabaseDao {
     @Query("SELECT * from followup_item_table WHERE followUpID = :key")
     suspend fun getFollowByID(key: Int): FollowUpItem?
 
-    @Query("SELECT * FROM followup_item_table ORDER BY followUpID DESC")
-     fun getAllFollowUpLessons(): LiveData<List<FollowUpItem>>
+    @Query("SELECT * FROM followup_item_table ORDER BY followUpID DESC LIMIT 1")
+    suspend fun getLastLesson(): FollowUpItem?
 
-    @Query("SELECT * FROM followup_item_table WHERE favourite ORDER BY followUpID DESC LIMIT 4")
-     fun getFavourites(): LiveData<List<FollowUpItem>>
+    @Query("SELECT * from followup_item_table ORDER BY followUpID DESC")
+     suspend  fun getAllFollowUpLessons(): List<FollowUpItem>
+
+//    @Query("SELECT * FROM followup_item_table WHERE favourite ORDER BY followUpID DESC LIMIT 4")
+//       fun getFavourites(): LiveData<List<FollowUpItem>>
 
 
-    @Query("SELECT * FROM followup_item_table  ORDER BY followUpID DESC LIMIT 4")
-    fun getSomeLessons(): LiveData<List<FollowUpItem>>
+    @Query("SELECT * FROM followup_item_table")
+    suspend fun getFavourites(): List<FollowUpItem>
+
+
+    @Query("SELECT * FROM  followup_item_table ORDER BY followUpID DESC LIMIT 4")
+     fun getSomeLessons(): LiveData<List<FollowUpItem>>
 
 
     @Query("SELECT * FROM followup_item_table LIMIT 1")
-    fun getAnyLesson(): FollowUpItem?
+    suspend  fun getAnyLesson(): FollowUpItem?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addLessons(lessons: List<FollowUpItem>?): LongArray?
+
+
+//
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertLessons(vararg lessons: List<FollowUpItem>?)
 
 //    @Query("DELETE FROM daily_sleep_quality_table")
 //    fun clear()

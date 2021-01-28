@@ -6,25 +6,54 @@ import androidx.lifecycle.*
 import com.flawlessconcepts.sufollowup.database.FollowUpDatabase
 import com.flawlessconcepts.sufollowup.database.FollowUpDatabaseDao
 import com.flawlessconcepts.sufollowup.database.FollowUpItem
+import com.flawlessconcepts.sufollowup.utils.createLessonsFromJson
 import com.flawlessconcepts.sufollowup.utils.formatlessons
 import kotlinx.coroutines.launch
 
 
 class HomeViewModel(
     val database: FollowUpDatabaseDao,
-    application: Application) : AndroidViewModel(application) {
+    application: Application
+) : AndroidViewModel(application) {
 
 
-    private var favourites =   MutableLiveData<List<FollowUpItem>>()
-     val someLessons =   MutableLiveData<List<FollowUpItem>>()
+    private var _singlelesson = MutableLiveData<FollowUpItem?>()
+    val singlelesson: MutableLiveData<FollowUpItem?>
+        get() = _singlelesson
 
+    private fun initializeSingleLesson() {
+        viewModelScope.launch {
+            _singlelesson.value = getLessonFromDatabase()
+        }
+    }
 
-    init {
-        initializeFavourites()
-        initializeLessons()
+    private val _mLessons = MediatorLiveData<List<FollowUpItem>>()
+
+    val mLessons : LiveData<List<FollowUpItem>> = _mLessons  // 1
+
+    fun allLessons() = viewModelScope.launch {  // 2
+        _mLessons.postValue(database.getAllFollowUpLessons())   // 3
     }
 
 
+//    private var _alllessons = MutableLiveData<List<FollowUpItem>>()
+//    val alllessons: LiveData<List<FollowUpItem>>
+//        get() = _alllessons
+//
+//    private fun initializeAllLesson() {
+//        viewModelScope.launch {
+//            _alllessons.value = getAllLessonFromDatabase()
+//        }
+//    }
+
+    private suspend fun getAllLessonFromDatabase(): List<FollowUpItem> {
+        var lessons = database.getAllFollowUpLessons()
+        return lessons
+    }
+    private suspend fun getLessonFromDatabase(): FollowUpItem? {
+        var lesson = database.getLastLesson()
+        return lesson
+    }
 
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
 
@@ -36,41 +65,44 @@ class HomeViewModel(
     }
 
 
-    private fun initializeFavourites() {
+    init {
+        populateDatabase()
+        initializeSingleLesson()
+        allLessons()
+       // initializeAllLesson()
+
+    }
+
+    //private val lessons = database.getAllFollowUpLessons()
+
+    val lessonString = Transformations.map(_mLessons) { lessons ->
+      formatlessons(lessons, application.resources)
+   }
+
+    fun populateDatabase() {
         viewModelScope.launch {
-            someLessons.value = getLessonsFromDatabase()
+
+            if (isDatabaseEmpty() == true){
+                val lessons = createLessonsFromJson(getApplication())
+                insert(lessons)
+
+                _showSnackbarEvent.value = true
+            }
+
         }
     }
-    private fun initializeLessons() {
-        viewModelScope.launch {
-            favourites.value = getLFavouriteFromDatabase()
-        }
+    private suspend fun insert(items: List<FollowUpItem>) {
+        database.addLessons(items)
+    }
+
+    private suspend fun isDatabaseEmpty(): Boolean? {
+        val anyLesson = database.getAnyLesson()
+        return anyLesson == null
     }
 
 
 
-    private suspend fun getLessonsFromDatabase(): List<FollowUpItem>? {
-        val somelessons = database.getSomeLessons()
-        return somelessons.value
-    }
 
-    private suspend fun getLFavouriteFromDatabase(): List<FollowUpItem>? {
-        val favourites = database.getFavourites()
-        return favourites.value
-    }
-    val somelessonString = Transformations.map(someLessons) { somelessons ->
-        //formatlessons(somelessons, application.resources)
-        "title"+somelessons.get(1).title +somelessons.get(2).title
-    }
-
-    val somelessonStrings ="mmmmmmmmmmmm"
-
-
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("HomeViewModel", "HomeViewModel destroyed!")
-    }
 }
 
 

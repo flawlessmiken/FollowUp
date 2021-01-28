@@ -21,7 +21,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [FollowUpItem::class], version = 1 , exportSchema = false)
+@Database(entities = [FollowUpItem::class], version = 6 , exportSchema = false)
 abstract class FollowUpDatabase : RoomDatabase() {
 
     abstract val followUpDatabaseDao: FollowUpDatabaseDao

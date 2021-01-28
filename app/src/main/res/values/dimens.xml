@@ -2,4 +2,5 @@
 <resources>
     <dimen name="horizontal_margin">10dp</dimen>
     <dimen name="margin">16dp</dimen>
+    <dimen name="marginb">6dp</dimen>
 </resources>

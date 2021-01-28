@@ -23,7 +23,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "followup_item_table")
 data class FollowUpItem(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     var followUpID: Int = 0,
 
     @ColumnInfo(name = "title")

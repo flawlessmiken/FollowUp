@@ -22,19 +22,19 @@
             <include
                 android:id="@+id/includeAppBar"
                 layout="@layout/grid_icons"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginStart="@dimen/marginb"
+                android:layout_marginTop="@dimen/marginb"
+                android:layout_marginEnd="@dimen/marginb"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="250dp"
                 android:background="@color/green_light"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:layout_marginEnd="@dimen/margin"
-                android:text="@{homeViewModel.somelessonString}"/>
+                android:layout_marginStart="@dimen/marginb"
+                android:layout_marginTop="@dimen/marginb"
+                android:layout_marginEnd="@dimen/marginb"
+                android:text="@{homeViewModel.lessonString}"/>
 
         </LinearLayout>
 

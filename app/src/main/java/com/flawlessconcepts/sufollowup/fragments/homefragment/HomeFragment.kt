@@ -42,24 +42,42 @@ class HomeFragment : Fragment() {
         val viewModelFactory = HomeFragmentVMFactory(dataSource, application)
 
         viewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            ).get(HomeViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
 
         showSnackback()
+        showSnackbackforLessons()
 
         binding.homeViewModel = viewModel
+        binding.setLifecycleOwner(this)
     }
 
     private fun showSnackback() {
         viewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-//                Snackbar.make(
-//                   // apfindViewById(android.R.id.content),
-//                    "", Snackbar.LENGTH_SHORT ).show()
-//
-//                viewModel.doneShowingSnackbar()
+                Snackbar.make(
+                    requireActivity().findViewById(android.R.id.content),
+                    getString(R.string.done_inserting_message),
+                    Snackbar.LENGTH_SHORT // How long to display the message.
+                ).show()
+                // Reset state to make sure the snackbar is only shown once, even if the device
+                // has a configuration change.
+                viewModel.doneShowingSnackbar()
+            }
+        })
+    }
+
+    private fun showSnackbackforLessons() {
+        viewModel.mLessons.observe(viewLifecycleOwner, Observer {
+            if (it != null) { // Observed state is true.
+                Snackbar.make(
+                    requireActivity().findViewById(android.R.id.content),
+                   "yes data " + it.size,
+                    Snackbar.LENGTH_SHORT // How long to display the message.
+                ).show()
+                // Reset state to make sure the snackbar is only shown once, even if the device
+                // has a configuration change.
+
             }
         })
     }

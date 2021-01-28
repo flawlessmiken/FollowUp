@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             navController
         )
         /// Populate Database with Lessons if Database is Empty
-        pupulateDataBase()
+        //pupulateDataBase()
 
     }
 
@@ -81,16 +81,16 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun pupulateDataBase() {
+    private suspend fun pupulateDataBase() {
 
-        var isE: String = "bbbb"
 
         val dataSource = FollowUpDatabase.getInstance(application).followUpDatabaseDao
+        var bol =dataSource.getAllFollowUpLessons()
         GlobalScope.launch {
 
-            if (isDatabaseEmpty(dataSource)) {
+            if (isDatabaseEmpty(dataSource) == true) {
                 runOnUiThread(Runnable {
-                    Toast.makeText(applicationContext, "Empty", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, bol.size.toString(), Toast.LENGTH_SHORT).show()
                 })
                 val lessons = createLessonsFromJson(applicationContext)
                 writeToDatabase(lessons, dataSource)
@@ -105,15 +105,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun isDatabaseEmpty(datasource: FollowUpDatabaseDao): Boolean {
-        return datasource.getAnyLesson() == null
+    private suspend fun isDatabaseEmpty(datasource: FollowUpDatabaseDao): Boolean? {
+        var bol =datasource.getFollowByID(1)
+        runOnUiThread(){
+            //Toast.makeText(applicationContext, bol?.title.toString(), Toast.LENGTH_SHORT).show()
+        }
+        return true
     }
 
     private suspend fun writeToDatabase(lesson: List<FollowUpItem>, datasource: FollowUpDatabaseDao) {
-        val addLessons = datasource.addLessons(lesson)
+        val addLessons = datasource.insert(lesson.get(1))
         runOnUiThread(Runnable {
             if (addLessons != null) {
-                Toast.makeText(applicationContext, "Writing to database" +addLessons.size, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(applicationContext, "Writing to database", Toast.LENGTH_SHORT).show()
             }
         })
     }
